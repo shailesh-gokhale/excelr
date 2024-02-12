@@ -2,25 +2,69 @@ print (' ~ ~ ~ ~ ~ ~ ~ ~ OM SHRI GANESHAAYA NAMAHA ~ ~ ~ ~ ~ ~ ~ ~ ')
 
 import streamlit as st
 import joblib
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Load the trained model
 model = joblib.load('model.pkl')
 
+
+# Define a dictionary to map numerical values to category names
+category_map = {'Low': 0, 'Medium': 0.5, 'High': 1}
+threshold_map = {'15%': 15, '30%': 30, '45%': 45, '60%': 60, '75%': 75, '90%': 90}
+
 # Create the UI elements
-st.title('Bankruptcy Prevention')
+st.markdown(
+    "<p style='font-size: 32px; color: blue'>Bankruptcy Prevention.</p>"
+    "<p style='font-size: 24px; background-color: #eeeeee; display: inline; padding: 5px; border-radius: 5px;'>Selected Model: Logistic Regression</p>", 
+    unsafe_allow_html=True
+)
 st.sidebar.title("Data Entry Panel")
-feature1 = st.sidebar.slider('industrial_risk: 0=low risk, 0.5=medium risk, 1=high risk.', 0.0, 1.0, step=0.5)
-feature2 = st.sidebar.slider('management_risk: 0=low risk, 0.5=medium risk, 1=high risk', 0.0, 1.0, step=0.5)
-feature3 = st.sidebar.slider('financial_flexibility: 0=low flexibility, 0.5=medium flexibility, 1=high flexibility', 0.0, 1.0, step=0.5)
-feature4 = st.sidebar.slider('credibility: 0=low credibility, 0.5=medium credibility, 1=high credibility', 0.0, 1.0, step=0.5)
-feature5 = st.sidebar.slider('competitiveness: 0=low competitiveness, 0.5=medium competitiveness, 1=high competitiveness', 0.0, 1.0, step=0.5)
-feature6 = st.sidebar.slider('operating_risk: 0=low risk, 0.5=medium risk, 1=high risk', 0.0, 1.0, step=0.5)
+feature1 = st.sidebar.selectbox("Industrial Risk: ", options=list(category_map.values()), format_func=lambda x: list(category_map.keys())[list(category_map.values()).index(x)])
+feature2 = st.sidebar.selectbox("Management Risk: ", options=list(category_map.values()), format_func=lambda x: list(category_map.keys())[list(category_map.values()).index(x)])
+feature3 = st.sidebar.selectbox("Financial Flexibility: ", options=list(category_map.values()), format_func=lambda x: list(category_map.keys())[list(category_map.values()).index(x)])
+feature4 = st.sidebar.selectbox("Credibility: ", options=list(category_map.values()), format_func=lambda x: list(category_map.keys())[list(category_map.values()).index(x)])
+feature5 = st.sidebar.selectbox("Competitiveness: ", options=list(category_map.values()), format_func=lambda x: list(category_map.keys())[list(category_map.values()).index(x)])
+feature6 = st.sidebar.selectbox("Operating Risk: ", options=list(category_map.values()), format_func=lambda x: list(category_map.keys())[list(category_map.values()).index(x)])
+
+threshold = st.sidebar.selectbox("Threshold: ", options=list(threshold_map.values()), format_func=lambda x: list(threshold_map.keys())[list(threshold_map.values()).index(x)], index=2)
+
 
 # Make predictions
-prediction = model.predict([[feature1, feature2, feature3, feature4, feature5, feature6]])
+prediction = model.predict([[int(feature1), int(feature2), int(feature3), int(feature4), int(feature5), int(feature6)]])
+probabilities = model.predict_proba([[int(feature1), int(feature2), int(feature3), int(feature4), int(feature5), int(feature6)]])
+prob_0 = round(probabilities[0][0], 4)*100
+prob_1 = round(probabilities[0][1], 4)*100
 
 # Display the prediction
 if prediction[0] == 1:
-    st.write('BANKRUPT')
+    st.markdown(
+    "<p style='font-size: 24px; color: red'><b>Predicted Class (@threshold=50%): BANKRUPT [1]</b></p>", 
+    unsafe_allow_html=True
+)
 else:
-    st.write('NON-BANKRUPT')
+    st.markdown(
+    "<p style='font-size: 24px; color: green'><b>Predicted Class (@threshold=50%): NON-BANKRUPT [0]</b></p>", 
+    unsafe_allow_html=True
+)
+
+# Display the prediction for selected threshold
+if prob_1 > threshold:
+    st.markdown(
+    "<p style='font-size: 24px; color: red'><b>Predicted Class (@threshold=" + str(threshold) + "%): BANKRUPT [1]</b></p>", 
+    unsafe_allow_html=True
+)
+else:
+    st.markdown(
+    "<p style='font-size: 24px; color: green'><b>Predicted Class (@threshold=" + str(threshold) + "%): NON-BANKRUPT [0]</b></p>", 
+    unsafe_allow_html=True
+)
+
+# Display the class probabilities
+st.markdown("<p style='font-size: 24px; color: blue'><b>Class Probabilities: </p>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='font-size: 18px; color: #666666'><b>Class Non-Bankrupt [0]: </b> <span style='background-color: #eeeeee; display: inline; padding: 3px; border-radius: 5px;'> " + 
+    str(prob_0) +
+    "%</span> | <b>Class Bankrupt [1]: </b><span style='background-color: #eeeeee; display: inline; padding: 3px; border-radius: 5px;'>" + str(prob_1) + "%</span></p>",
+    unsafe_allow_html=True
+)
