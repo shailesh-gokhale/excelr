@@ -1,5 +1,8 @@
 print (' ~ ~ ~ ~ ~ ~ ~ ~ OM SHRI GANESHAAYA NAMAHA ~ ~ ~ ~ ~ ~ ~ ~ ')
 
+# v2.0
+# Updates: UI update, added class probabilities and threshold setting for LR
+
 import streamlit as st
 import joblib
 import pandas as pd
