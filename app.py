@@ -72,17 +72,17 @@ st.markdown(
 
 # Display the selected parameters for all features
 st.markdown("<p style='font-size: 20px; color: blue'><b>Predictors: </p>", unsafe_allow_html=True)
-selected_features = {
-    "Industrial Risk": list(category_map.keys())[list(category_map.values()).index(feature1)],
-    "Management Risk": list(category_map.keys())[list(category_map.values()).index(feature2)],
-    "Financial Flexibility": list(category_map.keys())[list(category_map.values()).index(feature3)],
-    "Credibility": list(category_map.keys())[list(category_map.values()).index(feature4)],
-    "Competitiveness": list(category_map.keys())[list(category_map.values()).index(feature5)],
-    "Operating Risk": list(category_map.keys())[list(category_map.values()).index(feature6)]
-}
+#selected_features = {
+#    "Industrial Risk": list(category_map.keys())[list(category_map.values()).index(feature1)],
+#    "Management Risk": list(category_map.keys())[list(category_map.values()).index(feature2)],
+#    "Financial Flexibility": list(category_map.keys())[list(category_map.values()).index(feature3)],
+#    "Credibility": list(category_map.keys())[list(category_map.values()).index(feature4)],
+#    "Competitiveness": list(category_map.keys())[list(category_map.values()).index(feature5)],
+#    "Operating Risk": list(category_map.keys())[list(category_map.values()).index(feature6)]
+#}
 
-selected_values = {key: category_map[value] for key, value in selected_features.items()}
+#selected_values = {key: category_map[value] for key, value in selected_features.items()}
 
-st.write(selected_values)
-print(selected_values)
+#st.write(selected_values)
+#print(selected_values)
 #st.table(selected_values)
