@@ -5,6 +5,7 @@ print (' ~ ~ ~ ~ ~ ~ ~ ~ OM SHRI GANESHAAYA NAMAHA ~ ~ ~ ~ ~ ~ ~ ~ ')
 
 import streamlit as st
 import joblib
+import pandas as pd
 
 # Load the trained model
 model = joblib.load('model.pkl')
@@ -40,32 +41,49 @@ prob_1 = round(probabilities[0][1], 4)*100
 # Display the prediction
 if prediction[0] == 1:
     st.markdown(
-    "<p style='font-size: 24px; color: red'><b>Predicted Class (@threshold=50%): BANKRUPT [1]</b></p>", 
+    "<p style='font-size: 20px; color: red'><b>Predicted Class (@threshold=50%): BANKRUPT [1]</b></p>", 
     unsafe_allow_html=True
 )
 else:
     st.markdown(
-    "<p style='font-size: 24px; color: green'><b>Predicted Class (@threshold=50%): NON-BANKRUPT [0]</b></p>", 
+    "<p style='font-size: 20px; color: green'><b>Predicted Class (@threshold=50%): NON-BANKRUPT [0]</b></p>", 
     unsafe_allow_html=True
 )
 
 # Display the prediction for selected threshold
 if prob_1 > threshold:
     st.markdown(
-    "<p style='font-size: 24px; color: red'><b>Predicted Class (@threshold=" + str(threshold) + "%): BANKRUPT [1]</b></p>", 
+    "<p style='font-size: 20px; color: red'><b>Predicted Class (@threshold=" + str(threshold) + "%): BANKRUPT [1]</b></p>", 
     unsafe_allow_html=True
 )
 else:
     st.markdown(
-    "<p style='font-size: 24px; color: green'><b>Predicted Class (@threshold=" + str(threshold) + "%): NON-BANKRUPT [0]</b></p>", 
+    "<p style='font-size: 20px; color: green'><b>Predicted Class (@threshold=" + str(threshold) + "%): NON-BANKRUPT [0]</b></p>", 
     unsafe_allow_html=True
 )
 
 # Display the class probabilities
-st.markdown("<p style='font-size: 24px; color: blue'><b>Class Probabilities: </p>", unsafe_allow_html=True)
+st.markdown("<p style='font-size: 20px; color: blue'><b>Class Probabilities: </p>", unsafe_allow_html=True)
 st.markdown(
     "<p style='font-size: 18px; color: #666666'><b>Class Non-Bankrupt [0]: </b> <span style='background-color: #eeeeee; display: inline; padding: 3px; border-radius: 5px;'> " + 
     str(prob_0) +
     "%</span> | <b>Class Bankrupt [1]: </b><span style='background-color: #eeeeee; display: inline; padding: 3px; border-radius: 5px;'>" + str(prob_1) + "%</span></p>",
     unsafe_allow_html=True
 )
+
+# Display the selected parameters for all features
+st.markdown("<p style='font-size: 20px; color: blue'><b>Predictors: </p>", unsafe_allow_html=True)
+selected_features = {
+    "Industrial Risk": list(category_map.keys())[list(category_map.values()).index(feature1)],
+    "Management Risk": list(category_map.keys())[list(category_map.values()).index(feature2)],
+    "Financial Flexibility": list(category_map.keys())[list(category_map.values()).index(feature3)],
+    "Credibility": list(category_map.keys())[list(category_map.values()).index(feature4)],
+    "Competitiveness": list(category_map.keys())[list(category_map.values()).index(feature5)],
+    "Operating Risk": list(category_map.keys())[list(category_map.values()).index(feature6)]
+}
+
+selected_values = {key: category_map[value] for key, value in selected_features.items()}
+
+st.write(selected_values)
+print(selected_values)
+#st.table(selected_values)
