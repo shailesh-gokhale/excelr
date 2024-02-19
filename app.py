@@ -83,6 +83,6 @@ selected_features = {
 
 selected_values = {key: category_map[value] for key, value in selected_features.items()}
 
-#st.write(selected_values)
+st.write(selected_values)
 print(selected_values)
 #st.table(selected_values)
